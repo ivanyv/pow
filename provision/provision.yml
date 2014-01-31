@@ -1,0 +1,122 @@
+- hosts: servers
+  vars_files:
+    - vars.yml
+  sudo: true
+
+  tasks:
+    - name: system | copy iptables rules
+      copy: src=files/iptables.rules dest=/etc/iptables.rules owner=root group=root
+
+    - name: system | copy iptables script
+      copy: src=files/iptables-load dest=/etc/network/if-pre-up.d/iptables-load mode=0744 owner=root group=root
+
+    - name: system | configure system environment
+      copy: src=files/environment dest=/etc/environment
+
+    - name: system | configure user environment
+      copy: src=files/environment dest=/home/{{ user }}/.ssh/environment owner={{ user }} group={{ user }} mode=0600
+
+    - name: system | install packages
+      apt: pkg={{ item }} update-cache=yes
+      with_items:
+        - build-essential
+        - python-setuptools
+        - python-dev
+        - unattended-upgrades
+        - fail2ban
+        - git
+        - postgresql
+        - libpq-dev
+        - postfix
+        - zlib1g
+        - zlib1g-dev
+        - libssl-dev
+        - libreadline6
+        - libreadline6-dev
+        - curl
+        - apt-transport-https
+        - python-pycurl
+        - ruby-dev
+        - libcurl4-openssl-dev
+        - imagemagick
+
+    - name: system | configure unattended upgrades
+      copy: src=files/unattended-upgrades dest=/etc/apt/apt.conf.d/10periodic
+
+    - name: postgresql | install psycopg
+      easy_install: name=psycopg2
+
+    - name: postgresql | configure PostgreSQL user
+      lineinfile: dest=/etc/postgresql/9.1/main/pg_hba.conf regexp='^local .*all .*postgres .*(peer|trust)' line='local all postgres trust'
+      register: postgresql
+
+    - name: postgresql | restart PostgreSQL
+      command: service postgresql restart
+      when: postgresql.changed
+
+    - name: postgresql | create database
+      postgresql_db: name={{ app_name }}
+
+    - name: ruby | clone rbenv repository
+      git: repo=git://github.com/sstephenson/rbenv.git dest=/usr/local/rbenv
+
+    - name: ruby | configure rbenv environment
+      template: src=templates/rbenv.sh dest=/etc/profile.d/rbenv.sh mode=0755
+
+    - name: ruby | install ruby-build
+      git: repo=git://github.com/sstephenson/ruby-build.git dest=/usr/local/rbenv/plugins/ruby-build
+
+    - name: ruby | install Ruby
+      shell: rbenv install {{ ruby_version }} creates=/usr/local/rbenv/versions
+      register: rubyinstalled
+
+    - name: ruby | set default Ruby
+      shell: rbenv global {{ ruby_version }} creates=/usr/local/rbenv/version
+
+    - name: ruby | defaults for RubyGems
+      file: src=files/gemrc dest={{ item }}
+      with_items:
+        - /etc/gemrc
+        - /root/.gemrc
+        - /etc/skel/.gemrc
+
+    - name: ruby | install gems
+      shell: rbenv exec gem install {{ item }} creates=/usr/local/rbenv/versions/{{ ruby_version }}/bundler_installed
+      with_items:
+        - bundler
+
+    - name: ruby | dummy file to mark bundler as installed
+      copy: dest=/usr/local/rbenv/versions/{{ ruby_version }}/bundler_installed content=''
+
+    - name: ruby | rehash
+      shell: rbenv rehash
+      when: rubyinstalled.changed
+
+    - name: passenger | apt key
+      apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x561F9B9CAC40B2F7
+
+    - name: passenger | apt repository
+      apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger saucy main'
+
+    - name: passenger | install
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - nginx-extras
+        - passenger
+
+    - name: passenger | enable nginx module
+      lineinfile: dest=/etc/nginx/nginx.conf regexp='passenger_root' line='passenger_root /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini;'
+
+    - name: passenger | disable default site
+      file: path=/etc/nginx/sites-enabled/default state=absent
+
+    - name: app | configure vhost
+      template: src=templates/site.conf dest=/etc/nginx/sites-available/{{ app_name }}
+      register: site_configuration
+
+    - name: app | enable site
+      file: path=/etc/nginx/sites-enabled/{{ app_name }} src=/etc/nginx/sites-available/{{ app_name }} state=link validate='nginx -t'
+
+    - name: app | reload web server
+      service: name=nginx state=reloaded
+      when: site_configuration.changed

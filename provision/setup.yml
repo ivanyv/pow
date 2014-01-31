@@ -1,0 +1,33 @@
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  sudo: true
+
+  tasks:
+    - name: system | create user
+      user: home=/home/{{ user }} name={{ user }} state=present shell=/bin/bash password="$1$money ro$TjrFRyJXPkqIA1loMB89A0"
+
+    - name: system | configure sudo
+      template: src=templates/sudoers dest=/etc/sudoers validate='visudo -cf %s'
+
+    - name: system | disable root SSH login
+      lineinfile: dest=/etc/ssh/sshd_config regexp='^PermitRootLogin' line='PermitRootLogin no'
+
+    - name: system | disable challenge response authentication
+      lineinfile: dest=/etc/ssh/sshd_config regexp='^ChallengeResponseAuthentication' line='ChallengeResponseAuthentication no'
+
+    - name: system | disable password authentication
+      lineinfile: dest=/etc/ssh/sshd_config regexp='^PasswordAuthentication' line='PasswordAuthentication no'
+
+    - name: system | disable PAM
+      lineinfile: dest=/etc/ssh/sshd_config regexp='^UsePAM' line='UsePAM no'
+
+    - name: system | copy SSH key
+      authorized_key: user={{ user }} key="{{ lookup('file', ssh_key_file) }}"
+
+    - name: system | permit SSH user environment
+      lineinfile: dest=/etc/ssh/sshd_config regexp='^PermitUserEnvironment' line='PermitUserEnvironment yes'
+
+    - name: system | reload SSH
+      command: reload ssh

@@ -1,0 +1,30 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [62:13856]
+:ufw-after-forward - [0:0]
+:ufw-after-input - [0:0]
+:ufw-after-logging-forward - [0:0]
+:ufw-after-logging-input - [0:0]
+:ufw-after-logging-output - [0:0]
+:ufw-after-output - [0:0]
+:ufw-before-forward - [0:0]
+:ufw-before-input - [0:0]
+:ufw-before-logging-forward - [0:0]
+:ufw-before-logging-input - [0:0]
+:ufw-before-logging-output - [0:0]
+:ufw-before-output - [0:0]
+:ufw-reject-forward - [0:0]
+:ufw-reject-input - [0:0]
+:ufw-reject-output - [0:0]
+:ufw-track-input - [0:0]
+:ufw-track-output - [0:0]
+[123:8484] -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+[0:0] -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+[0:0] -A INPUT -p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j DROP
+[0:0] -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
+[0:0] -A INPUT -i lo -j ACCEPT
+[0:0] -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+[0:0] -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+[23:1548] -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+COMMIT
