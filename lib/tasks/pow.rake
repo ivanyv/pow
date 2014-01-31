@@ -30,4 +30,9 @@ task :pow do
   File.rename File.join(app_root, 'APP_README.md'), File.join(app_root, 'README.md')
 
   system 'git add -u . && git commit -m "Customizations."'
+  system 'git remote rm origin'
+  system 'rake app:bootstrap'
+
+  puts
+  puts "Done!"
 end
