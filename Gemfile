@@ -18,6 +18,8 @@ gem 'bcrypt-ruby', '~> 3.1.2'
 gem 'dotenv-rails'
 
 group :development do
+  gem 'mina'
+  gem 'mina-scp', require: false
   gem 'spring'
   gem 'guard'
   gem 'better_errors'

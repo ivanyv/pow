@@ -7,5 +7,5 @@ end
 
 desc 'Fail if RAILS_ENV is not defined'
 task :require_env do
-  raise 'No RAILS_ENV defined' unless ENV['RAILS_ENV'].present?
+  raise 'No RAILS_ENV defined' if ENV['RAILS_ENV'].to_s.strip == ''
 end

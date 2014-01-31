@@ -22,12 +22,10 @@ class Rake::Application
     begin
       invoke_task_without_catch(*args)
     rescue RuntimeError => e
-      begin
-        load_rails_environment
-        invoke_task_without_catch(*args)
-      rescue Exception => e
-        raise(e)
-      end
+      raise e unless /build task/.match(e.to_s)
+
+      load_rails_environment
+      invoke_task_without_catch(*args)
     end
   end
   alias_method :invoke_task, :invoke_task_with_catch
