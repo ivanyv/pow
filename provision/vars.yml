@@ -4,4 +4,4 @@ ssh_key_file: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
 app_name: <app_name>
 app_root: /home/{{ user }}
 repo_host: git@bitbucket.org
-ruby_version: 2.0.0-p353
+ruby_version: 2.1.0-p0

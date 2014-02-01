@@ -19,7 +19,8 @@ In development this will get you started:
 
 Then to start the app:
 
-    $ bundle exec guard start
+    $ bundle exec zeus start
+    $ bundle exec guard
 
 ## Provisioning
 
@@ -38,8 +39,8 @@ Then deployment can start:
 
 ## Configuration
 
-* `.env` - Configuration settings. deploy:setup will ask for values.
+* `.env` - Configuration settings.
 
 ## Testing
 
-    rake test
+    $ bundle exec zeus test test

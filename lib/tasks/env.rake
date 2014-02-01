@@ -1,4 +1,4 @@
-%I[development test staging production].each do |environment|
+%I[development staging production].each do |environment|
   desc "Set environment to #{environment}"
   task environment do
     ENV['RAILS_ENV'] = environment.to_s

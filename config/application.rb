@@ -23,7 +23,7 @@ module AppName
     config.generators do |g|
       g.helper false
       g.assets false
-      g.test_framework :test_unit, fixture: false
+      g.test_framework :test_unit, fixture_replacement: :factory_girl
     end
   end
 end
