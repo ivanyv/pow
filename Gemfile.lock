@@ -7,12 +7,13 @@ GIT
       hooks
       representable (>= 1.7.5)
 
-PATH
-  remote: /home/ivan/work/oss/minitest-rails
+GIT
+  remote: git://github.com/ivanyv/annotate_models.git
+  revision: eb633bcf19c6a1242cb069e2e66829a9fa0021f1
   specs:
-    minitest-rails (1.0.0.beta3.20140131185320)
-      minitest (~> 5.2)
-      railties (>= 3.0)
+    annotate (2.6.1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
 
 GEM
   remote: https://rubygems.org/
@@ -44,6 +45,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    addressable (2.3.5)
     arel (5.0.0)
     atomic (1.1.14)
     awesome_print (1.2.0)
@@ -107,6 +109,7 @@ GEM
     faker (1.2.0)
       i18n (~> 0.5)
     ffi (1.9.3)
+    flexmock (1.3.3)
     font-awesome-rails (4.0.3.1)
       railties (>= 3.2, < 5.0)
     formatador (0.2.4)
@@ -119,14 +122,11 @@ GEM
     guard-bundler (2.0.0)
       bundler (~> 1.0)
       guard (~> 2.2)
-    guard-minitest (2.2.0)
-      guard (~> 2.0)
-      minitest (>= 3.0)
     guard-rails (0.4.7)
       guard (>= 0.2.2)
-    guard-zeus (2.0.0)
+    guard-test (2.0.4)
       guard (~> 2.0)
-      zeus (~> 0)
+      test-unit (~> 2.2)
     hike (1.2.3)
     hooks (0.3.3)
     i18n (0.6.9)
@@ -137,6 +137,8 @@ GEM
     kaminari (0.15.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    launchy (2.4.2)
+      addressable (~> 2.3)
     less (2.4.0)
       commonjs (~> 0.2.7)
     less-rails (2.4.2)
@@ -144,6 +146,8 @@ GEM
       less (~> 2.4.0)
     less-rails-bootstrap (3.1.0.0)
       less-rails (~> 2.4.2)
+    letter_opener (1.2.0)
+      launchy (~> 2.2)
     letters (0.4.1)
       activesupport
       awesome_print
@@ -193,6 +197,8 @@ GEM
       pry (>= 0.9.10)
     pundit (0.2.1)
       activesupport (>= 3.0.0)
+    quiet_assets (1.0.2)
+      railties (>= 3.1, < 5.0)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -244,6 +250,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     temple (0.6.7)
+    test-unit (2.5.5)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
@@ -265,13 +272,14 @@ GEM
     xml-simple (1.1.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
-    zeus (0.13.3)
+    zeus (0.13.4.pre2)
       method_source (>= 0.6.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate!
   bcrypt-ruby (~> 3.1.2)
   better_errors
   binding_of_caller
@@ -283,20 +291,21 @@ DEPENDENCIES
   draper
   factory_girl_rails
   faker
+  flexmock
   font-awesome-rails
   guard
   guard-bundler
-  guard-minitest
   guard-rails
-  guard-zeus
+  guard-test
   jquery-rails
   kaminari
   less-rails
   less-rails-bootstrap
+  letter_opener
   letters
   mina
   mina-scp
-  minitest-rails!
+  minitest
   nested_form
   non-stupid-digest-assets
   paperclip
@@ -304,10 +313,13 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   pundit
+  quiet_assets
   rails (= 4.1.0.beta1)
   rails_db_info
   reform!
   simple_form
   slim-rails
+  test-unit
   therubyracer
   uglifier (>= 1.3.0)
+  zeus (= 0.13.4.pre2)

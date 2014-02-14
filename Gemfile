@@ -37,6 +37,8 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'rails_db_info'
+  gem 'letter_opener'
+  gem 'quiet_assets'
 end
 
 group :development, :test do
