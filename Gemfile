@@ -41,8 +41,9 @@ group :development do
   gem 'quiet_assets'
 end
 
+gem 'pry-rails'
 group :development, :test do
-  gem 'pry-rails'
+  gem 'pry-plus'
   gem 'pry-byebug'
   gem 'letters', require: false
   gem 'debugging'
