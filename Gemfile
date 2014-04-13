@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 source 'https://rails-assets.org'
 
-gem 'rails', '4.1.0.beta1'
+gem 'rails', '4.1.0'
 gem 'pg'
 gem 'annotate', github: 'ivanyv/annotate_models'
 
-gem 'slim-rails'
+gem 'slim-rails', github: 'slim-template/slim-rails'
 gem 'less-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -41,9 +41,8 @@ group :development do
   gem 'quiet_assets'
 end
 
-gem 'pry-rails'
 group :development, :test do
-  gem 'pry-plus'
+  gem 'pry-rails'
   gem 'pry-byebug'
   gem 'letters', require: false
   gem 'debugging'
