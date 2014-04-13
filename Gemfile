@@ -39,6 +39,7 @@ group :development do
   gem 'rails_db_info'
   gem 'letter_opener'
   gem 'quiet_assets'
+  gem 'marginalia'
 end
 
 group :development, :test do

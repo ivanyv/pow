@@ -27,3 +27,5 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 end
+
+require 'marginalia/railtie'
