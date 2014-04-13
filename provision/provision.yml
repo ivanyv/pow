@@ -74,7 +74,7 @@
       shell: rbenv global {{ ruby_version }} creates=/usr/local/rbenv/version
 
     - name: ruby | defaults for RubyGems
-      file: src=files/gemrc dest={{ item }}
+      copy: src=files/gemrc dest={{ item }}
       with_items:
         - /etc/gemrc
         - /root/.gemrc
